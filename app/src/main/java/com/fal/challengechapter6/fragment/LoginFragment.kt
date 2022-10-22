@@ -64,7 +64,6 @@ class LoginFragment : Fragment() {
         binding.login.setOnClickListener {
             val username = binding.username.text.toString()
             val password = binding.password.text.toString()
-
             auth(username,password)
         }
 
@@ -80,18 +79,21 @@ class LoginFragment : Fragment() {
                 Toast.makeText(context, R.string.login_failed, Toast.LENGTH_SHORT).show()
                 Log.i("LOGIN STATUS", it.toString())
             } else {
-                Log.d(TAG, "auth success : ${it}")
+                Log.d(TAG, "auth success : $it")
                 for (i in 0 until it.size){
-                    if (username.equals(it[i].username) && password.equals(it[i].password)){
+                    if (username == it[i].username && password == it[i].password){
+                        //Save user Sessions in proto
                         userVM.updateProto(it[i].username, it[i].id)
+                        //Clear Error
                         binding.inputLayoutUsername.error = null
                         binding.inputLayoutPass.error = null
+                        //Navigate to Home
                         findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
                         Toast.makeText(context, R.string.login_success, Toast.LENGTH_SHORT).show()
-                        Log.i("LOGIN STATUS", it.toString())
-                        Log.d(TAG, "auth: ${it[i].username}, ${it[i].id}")
+                        Log.i("User Data", it.toString())
+                        Log.d(TAG, "auth success: ${it[i].username}, ${it[i].id}")
                     }else{
-                        Log.d(TAG, "auth: LOGIN GAGAL")
+                        Log.d(TAG, "auth: username or password not match")
                     }
                 }
             }
