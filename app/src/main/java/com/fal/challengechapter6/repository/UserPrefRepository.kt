@@ -26,6 +26,8 @@ class UserPrefRepository (private val context: Context) {
     suspend fun saveDataProto(nama : String, id : String){
         context.userPreferencesStore.updateData { preferences ->
             preferences.toBuilder().setNama(nama).build()
+        }
+        context.userPreferencesStore.updateData { preferences ->
             preferences.toBuilder().setUserId(id).build()
             //preferences.toBuilder()
         }
@@ -34,6 +36,9 @@ class UserPrefRepository (private val context: Context) {
     suspend fun deleteData(){
         context.userPreferencesStore.updateData { preferences ->
             preferences.toBuilder().clearNama().build()
+        }
+        context.userPreferencesStore.updateData { preferences ->
+            preferences.toBuilder().clearUserId().build()
         }
     }
 

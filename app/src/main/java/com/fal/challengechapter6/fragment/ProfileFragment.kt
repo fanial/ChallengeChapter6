@@ -16,15 +16,15 @@ import com.fal.challengechapter6.R
 import com.fal.challengechapter6.databinding.FragmentProfileBinding
 import com.fal.challengechapter6.viewmodel.UserViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ProfileFragment : Fragment() {
     private var _binding : FragmentProfileBinding? = null
     private val binding get() = _binding!!
-    private lateinit var model : UserViewModel
-    private lateinit var share : SharedPreferences
-    private lateinit var editor: SharedPreferences.Editor
-    private lateinit var id : String
-    private lateinit var oldPassword : String
+    private lateinit var model: UserViewModel
+    var id = ""
+    var username = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,14 +38,16 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         model = ViewModelProvider(this)[UserViewModel::class.java]
-        share = requireActivity().getSharedPreferences("account", Context.MODE_PRIVATE)
-        share.getString("username","username")
-        editor = share.edit()
-        id = share.getString("id", "").toString()
+        model.dataUser.observe(viewLifecycleOwner){
+            if(it == null){
+                Log.d("SESSIONS", "UserID Null : $id, $username")
+            }else{
+                id = it.userId
+                getDataUser(id)
+            }
+        }
 
-        getDataUser()
 
-        Log.d("Homescreen", "Username : $share")
         binding.btnUpdate.setOnClickListener {
             updateUser()
         }
@@ -59,13 +61,17 @@ class ProfileFragment : Fragment() {
         val email = binding.vEmail.text.toString()
         val username = binding.vUsername.text.toString()
         val password = binding.vPassword.text.toString()
-            model.putUser(email, id, username, password)
+        val repass = binding.vRePassword.text.toString()
             model.liveUpdateUser().observe(viewLifecycleOwner){
                 if (it != null) {
-                    if (!oldPassword.equals(password)){
-                        binding.inputLayoutPass.error = getString(R.string.invalid_password)
+                    if (repass != password){
+                        binding.inputLayoutPass.error = getString(R.string.pass_not_match)
+                        binding.inputLayoutRePass.error = getString(R.string.pass_not_match)
+                    }else{
+                        model.putUser(email, id, username, password)
+                        findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
+                        Toast.makeText(requireContext(), getString(R.string.logout_for_update), Toast.LENGTH_SHORT).show()
                     }
-                    Toast.makeText(requireContext(), getString(R.string.update_success), Toast.LENGTH_SHORT).show()
                 }
             }
     }
@@ -81,21 +87,19 @@ class ProfileFragment : Fragment() {
             }
             .setPositiveButton(resources.getString(R.string.lgout)) { dialog, which ->
                 // Respond to positive button press
-                editor.clear()
-                editor.apply()
+                model.delProto()
                 findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
             }
             .show()
     }
 
-    private fun getDataUser() {
+    private fun getDataUser(id : String) {
         model.getUserbyId(id)
         model.liveUserid().observe(viewLifecycleOwner){
             if (it != null){
                 binding.vUsername.setText(it.username)
                 binding.vEmail.setText(it.email)
                 binding.vPassword.setText(it.password)
-                oldPassword = it.password
             }
         }
     }

@@ -61,10 +61,11 @@ class HomeFragment : Fragment() {
         model.dataUser.observe(viewLifecycleOwner) {
             userId = it.userId
             username = it.nama
+                Log.d(TAG, "UserID : $userId, $username")
+
             if (it.equals("")) {
                 Log.d(TAG, "UserID Null : $userId")
             } else {
-                Log.d(TAG, "UserID : $userId")
                 binding.welcomeBar.text = "Welcome, $username"
                 viewModel.callAllData(userId)
                 viewModel.allLiveData().observe(viewLifecycleOwner) {

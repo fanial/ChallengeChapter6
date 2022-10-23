@@ -1,29 +1,37 @@
 package com.fal.challengechapter6.fragment
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.fal.challengechapter6.R
 import com.fal.challengechapter6.databinding.FragmentFirstBinding
+import com.fal.challengechapter6.viewmodel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 @Suppress("DEPRECATION")
+@AndroidEntryPoint
 class SplashFragment : Fragment() {
 
     private var _binding: FragmentFirstBinding? = null
-    private lateinit var sharedPref : SharedPreferences
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var model: UserViewModel
+    var userId = ""
+    var username = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,25 +46,29 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sharedPref = activity?.getSharedPreferences("account", Context.MODE_PRIVATE)!!
         val splashTime : Long = 3000
 
-        Handler().postDelayed({
-            detectAkun()
+        Handler(Looper.myLooper()!!).postDelayed({
+            detectAcc()
         }, splashTime)
 
     }
 
-    private fun detectAkun() {
-        sharedPref = requireActivity().getSharedPreferences("account", Context.MODE_PRIVATE)
+    private fun detectAcc() {
+        model = ViewModelProvider(this).get(UserViewModel::class.java)
+        model.dataUser.observe(viewLifecycleOwner){
+                if(it.userId.equals("")){
+                    Log.d("SESSIONS", "UserID Null : $userId, $username")
+                    Navigation.findNavController(binding.root).navigate(R.id.action_splashFragment_to_loginFragment)
+                } else {
+                    userId = it.userId
+                    username = it.nama
+                    Log.d("SESSIONS", "UserID : $userId, $username")
+                    Navigation.findNavController(binding.root).navigate(R.id.action_splashFragment_to_homeFragment)
 
-        Handler(Looper.myLooper()!!).postDelayed({
-            if(sharedPref.getString("id","").equals("")){
-                Navigation.findNavController(binding.root).navigate(R.id.action_splashFragment_to_loginFragment)
-            } else {
-                Navigation.findNavController(binding.root).navigate(R.id.action_splashFragment_to_homeFragment)
+                }
             }
-        },3000)
+
     }
 
     override fun onAttach(context: Context) {

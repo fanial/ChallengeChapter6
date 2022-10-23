@@ -82,6 +82,7 @@ class LoginFragment : Fragment() {
                 Log.d(TAG, "auth success : $it")
                 for (i in 0 until it.size){
                     if (username == it[i].username && password == it[i].password){
+                        Log.d(TAG, "auth: ${it[i].username}")
                         //Save user Sessions in proto
                         userVM.updateProto(it[i].username, it[i].id)
                         //Clear Error

@@ -15,7 +15,9 @@ import androidx.navigation.fragment.findNavController
 import com.fal.challengechapter6.R
 import com.fal.challengechapter6.databinding.FragmentRegistBinding
 import com.fal.challengechapter6.viewmodel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RegistFragment : Fragment() {
 
     private var _binding : FragmentRegistBinding? = null
@@ -51,10 +53,14 @@ class RegistFragment : Fragment() {
 
         if (username.isEmpty() && email.isEmpty() && password.isEmpty()){
             binding.inputLayoutPass.error = getString(R.string.empty_field)
+            binding.inputLayoutRePass.error = getString(R.string.empty_field)
             binding.inputLayoutUsername.error = getString(R.string.empty_field)
             binding.inputLayoutEmail.error = getString(R.string.empty_field)
             Toast.makeText(context, getString(R.string.empty_field), Toast.LENGTH_SHORT).show()
-        }else if(password == repass){
+        }else if(password != repass){
+            binding.inputLayoutPass.error = getString(R.string.pass_not_match)
+            binding.inputLayoutRePass.error = getString(R.string.pass_not_match)
+        }else{
             val model = ViewModelProvider(this)[UserViewModel::class.java]
             model.postDataUser(email,"",password,username)
             model.liveUser().observe(requireActivity()) {

@@ -26,6 +26,10 @@ class UserViewModel @Inject constructor(private val api : ApiService, applicatio
         repository.saveDataProto(nama, userId)
     }
 
+    fun delProto() = viewModelScope.launch {
+        repository.deleteData()
+    }
+
     //Live Data
     var userData : MutableLiveData<ResponseDataUserItem?> = MutableLiveData()
     var userList : MutableLiveData<List<ResponseDataUserItem>?> = MutableLiveData()
