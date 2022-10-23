@@ -13,7 +13,7 @@
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_margin="10dp">
 
             <RelativeLayout
@@ -30,7 +30,7 @@
 
                 <ImageView
                     android:id="@+id/vImage"
-                    android:layout_width="@dimen/image_hw"
+                    android:layout_width="match_parent"
                     android:layout_height="@dimen/image_hw"
                     android:layout_below="@+id/vTitle"
                     android:layout_centerHorizontal="true"
@@ -41,16 +41,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@id/vImage"
+                    android:layout_marginTop="@dimen/fab_margin"
                     android:hint="@string/welcome" />
-
-                <TextView
-                    android:id="@+id/vCategory"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/vContent"
-                    android:layout_alignParentBottom="true"
-                    android:gravity="center_horizontal"
-                    android:hint="@string/category" />
 
             </RelativeLayout>
 
@@ -82,11 +74,13 @@
                 android:text="@string/delete"/>
 
             <ImageView
+                android:id="@+id/btn_favorit"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:padding="5dp"
                 android:layout_gravity="end"
                 android:layout_marginEnd="@dimen/fab_margin"
-                android:src="@drawable/ic_baseline_favorite_24"
+                android:src="@drawable/unheart"
                 android:contentDescription="@string/favorite" />
 
         </com.google.android.material.bottomappbar.BottomAppBar>

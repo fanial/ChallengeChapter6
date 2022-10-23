@@ -12,7 +12,7 @@
 
         <ImageView
             android:id="@+id/vImage"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_marginEnd="5dp"
             android:contentDescription="@string/splash_image" />
@@ -21,7 +21,7 @@
             android:id="@+id/vTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/vImage"
+            android:layout_below="@id/vImage"
             android:hint="@string/title"
             android:padding="10dp"
             android:textSize="20sp" />

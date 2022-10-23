@@ -17,6 +17,7 @@ import com.fal.challengechapter6.R
 import com.fal.challengechapter6.databinding.FragmentDetailBinding
 import com.fal.challengechapter6.model.ResponseDataTaskItem
 import com.fal.challengechapter6.viewmodel.HomeViewModel
+import com.fal.challengechapter6.viewmodel.UserViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,7 +29,7 @@ class DetailFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    private lateinit var share : SharedPreferences
+    private lateinit var viewModel: HomeViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,47 +43,56 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //Shared Preference
-        share = requireActivity().getSharedPreferences("account", Context.MODE_PRIVATE)
-        val name = share.getString("username","username")
-        Log.d("Homescreen", "Username : $name")
+        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
         //Bundle from adapter
         val getData = arguments?.getSerializable("dataTask") as ResponseDataTaskItem
         val idTask = getData.idTask
         val userid = getData.userId
-        val category = getData.category
+        var category = getData.category
         val content = getData.content
         val title = getData.title
         val image = getData.image
         binding.vTitle.text = title
         Glide.with(this).load(image).into(binding.vImage)
         binding.vContent.text = content
-        binding.vCategory.text = category
 
         binding.btnUpdate.setOnClickListener {
-            MaterialAlertDialogBuilder(requireContext())
-                .setMessage(resources.getString(R.string.under_construc))
-                .setCancelable(false)
-                .setPositiveButton(resources.getString(R.string.previous)) { dialog, which ->
-                    dialog.cancel()
-                }
-                .show()
-
-            /**
             val data = Bundle()
-
             data.putString("idTask", idTask)
             data.putString("userId", userid)
             data.putString("category", category)
             data.putString("content", content)
             data.putString("title", title)
             data.putString("image", image)
-
-            data.putSerializable("update", getData)
             findNavController().navigate(R.id.action_detailFragment_to_updateFragment, data)
-            Log.d("DATA UPDATE", "${data}")
-             **/
+            Log.d("DATA UPDATE", "$data")
+        }
+
+        binding.btnFavorit.setOnClickListener {
+            if (category == "favorite"){
+                category = "unfavorite"
+                binding.btnFavorit.setImageResource(R.drawable.unheart)
+                viewModel.callUpdateData("unfavorite", content, idTask, image, title, userid)
+                viewModel.updateLiveData().observe(viewLifecycleOwner){
+                    if (it != null) {
+                        Log.d("UPDATE Favorite", "Update Success")
+                    } else {
+                    Log.d("UPDATE RETROFIT", "Data Null")
+                    }
+                }
+            }else{
+                category = "favorite"
+                binding.btnFavorit.setImageResource(R.drawable.heart)
+                viewModel.callUpdateData("favorite", content, idTask, image, title, userid)
+                viewModel.updateLiveData().observe(viewLifecycleOwner){
+                    if (it != null) {
+                        Log.d("UPDATE Favorite", "Update Success")
+                    } else {
+                        Log.d("UPDATE RETROFIT", "Data Null")
+                    }
+                }
+            }
         }
 
         binding.btnDelete.setOnClickListener {
@@ -96,9 +106,8 @@ class DetailFragment : Fragment() {
                 }
                 .setPositiveButton(resources.getString(R.string.delete)) { dialog, which ->
                     // Respond to positive button press
-                    val model = ViewModelProvider(this)[HomeViewModel::class.java]
-                    model.callDeleteData(userid, idTask)
-                    model.deleteLiveData().observe(viewLifecycleOwner) {
+                    viewModel.callDeleteData(userid, idTask)
+                    viewModel.deleteLiveData().observe(viewLifecycleOwner) {
                         if (it != null) {
                             Log.d("deleteFilm", it.toString())
                             Toast.makeText(context,

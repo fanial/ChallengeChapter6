@@ -44,4 +44,8 @@
     <string name="category">Category</string>
     <string name="title">Title</string>
     <string name="favorite">Favorite</string>
+    <string name="logout_for_update">You have change Password. Login for new Password</string>
+    <string name="pass_not_match">Password not Match</string>
+    <string name="favorited">Task Mark as Favorite</string>
+    <string name="unmark_favorited">Task Unmark as Favorite</string>
 </resources>

@@ -6,17 +6,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.fal.challengechapter6.R
+import com.fal.challengechapter6.databinding.FragmentDetailBinding
+import com.fal.challengechapter6.databinding.FragmentFavoriteBinding
+import com.fal.challengechapter6.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class FavoriteFragment : Fragment() {
+
+    private var _binding: FragmentFavoriteBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+    private lateinit var viewModel: HomeViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorite, container, false)
+        _binding = FragmentFavoriteBinding.inflate(inflater, container, false)
+        return binding.root
     }
+
+
 
 }

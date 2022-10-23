@@ -22,44 +22,48 @@
             android:layout_height="match_parent"
             android:padding="10dp">
 
-            <EditText
-                android:id="@+id/vTitle"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Title"
-                android:minHeight="48dp" />
+                app:errorEnabled="true">
 
-            <EditText
-                android:id="@+id/vCategory"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/vTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Title" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutImage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/vTitle"
-                android:hint="Category"
-                android:minHeight="48dp" />
+                android:layout_below="@id/layoutTitle"
+                app:errorEnabled="true">
 
-            <EditText
-                android:id="@+id/vImage"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/vImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Image Source" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/vCategory"
-                android:hint="Image Source"
-                android:minHeight="48dp" />
+                android:layout_below="@id/layoutImage"
+                app:errorEnabled="true">
 
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/vImage">
-
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/vContent"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:ems="10"
-                    android:gravity="start|top"
-                    android:hint="@string/welcome"
-                    android:inputType="textMultiLine"/>
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:hint="Content" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            </androidx.core.widget.NestedScrollView>
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
