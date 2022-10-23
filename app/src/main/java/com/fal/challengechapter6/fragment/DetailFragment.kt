@@ -57,6 +57,12 @@ class DetailFragment : Fragment() {
         Glide.with(this).load(image).into(binding.vImage)
         binding.vContent.text = content
 
+        if (category == "favorite"){
+            binding.btnFavorit.setImageResource(R.drawable.heart)
+        }else{
+            binding.btnFavorit.setImageResource(R.drawable.unheart)
+        }
+
         binding.btnUpdate.setOnClickListener {
             val data = Bundle()
             data.putString("idTask", idTask)
@@ -71,9 +77,9 @@ class DetailFragment : Fragment() {
 
         binding.btnFavorit.setOnClickListener {
             if (category == "favorite"){
-                category = "unfavorite"
+                category = "unfav"
                 binding.btnFavorit.setImageResource(R.drawable.unheart)
-                viewModel.callUpdateData("unfavorite", content, idTask, image, title, userid)
+                viewModel.callUpdateData("unfav", content, idTask, image, title, userid)
                 viewModel.updateLiveData().observe(viewLifecycleOwner){
                     if (it != null) {
                         Log.d("UPDATE Favorite", "Update Success")

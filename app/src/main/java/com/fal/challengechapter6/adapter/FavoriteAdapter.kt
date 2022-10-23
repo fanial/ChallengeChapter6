@@ -1,4 +1,4 @@
-package com.fal.challengechapter6
+package com.fal.challengechapter6.adapter
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,11 +6,12 @@ import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.fal.challengechapter6.R
 import com.fal.challengechapter6.databinding.ItemListBinding
 import com.fal.challengechapter6.model.ResponseDataTaskItem
 
-class ListAdapter(private var itemTask : List<ResponseDataTaskItem>): RecyclerView.Adapter<ListAdapter.ViewHolder>() {
-    class ViewHolder(val binding : ItemListBinding): RecyclerView.ViewHolder(binding.root)
+class FavoriteAdapter(private var itemTask : List<ResponseDataTaskItem>): RecyclerView.Adapter<FavoriteAdapter.ViewHolder>(){
+    class ViewHolder (val binding : ItemListBinding): RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = ItemListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -23,16 +24,15 @@ class ListAdapter(private var itemTask : List<ResponseDataTaskItem>): RecyclerVi
         holder.binding.btnDetail.setOnClickListener {
             val data = Bundle()
             data.putSerializable("dataTask", itemTask[position])
-            Navigation.findNavController(it).navigate(R.id.action_homeFragment_to_detailFragment, data)
+            Navigation.findNavController(it).navigate(R.id.action_favoriteFragment_to_detailFragment, data)
         }
     }
 
     override fun getItemCount(): Int {
-       return itemTask.size
+        return itemTask.size
     }
 
     fun setData(data : ArrayList<ResponseDataTaskItem>){
         this.itemTask = data
     }
-
 }

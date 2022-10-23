@@ -13,6 +13,12 @@ interface ApiService {
 
     ) : Call<List<ResponseDataTaskItem>>
 
+    @GET("user/{id}/task")
+    fun getFav(
+        @Path("id") userId: String,
+        @Query("category") favorite : String = "favorite"
+    ) : Call<List<ResponseDataTaskItem>>
+
     @GET("user/{id}/task/{idTask}")
     fun getTaskId(
         @Path("id") userId: String,

@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.fal.challengechapter6.ListAdapter
+import com.fal.challengechapter6.adapter.ListAdapter
 import com.fal.challengechapter6.R
 import com.fal.challengechapter6.databinding.FragmentHomeBinding
 import com.fal.challengechapter6.model.ResponseDataTaskItem
@@ -52,6 +52,9 @@ class HomeFragment : Fragment() {
         binding.btnProfil.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
         }
+        binding.btnFavorit.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_favoriteFragment)
+        }
 
     }
 
@@ -70,7 +73,7 @@ class HomeFragment : Fragment() {
                 viewModel.callAllData(userId)
                 viewModel.allLiveData().observe(viewLifecycleOwner) {
                     if (it != null) {
-                        adapter.setData(it as ArrayList<ResponseDataTaskItem>)
+                        adapter.setData(it as ArrayList<ResponseDataTaskItem> /* = java.util.ArrayList<com.fal.challengechapter6.model.ResponseDataTaskItem> */)
                         binding.rvTask.adapter = ListAdapter(it)
                         adapter = ListAdapter(it)
                         binding.rvTask.layoutManager =

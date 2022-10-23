@@ -1,14 +1,20 @@
 package com.fal.challengechapter6.fragment
 
+import android.content.ContentValues
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.fal.challengechapter6.R
-import com.fal.challengechapter6.databinding.FragmentDetailBinding
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.fal.challengechapter6.adapter.FavoriteAdapter
+import com.fal.challengechapter6.adapter.ListAdapter
 import com.fal.challengechapter6.databinding.FragmentFavoriteBinding
+import com.fal.challengechapter6.model.ResponseDataTaskItem
 import com.fal.challengechapter6.viewmodel.HomeViewModel
+import com.fal.challengechapter6.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,6 +26,10 @@ class FavoriteFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var viewModel: HomeViewModel
+    private lateinit var model: UserViewModel
+    private lateinit var adapter : FavoriteAdapter
+    var userId = ""
+    var username = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,6 +40,33 @@ class FavoriteFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        model = ViewModelProvider(this)[UserViewModel::class.java]
+        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+        //Set RV
+        adapter = FavoriteAdapter(ArrayList())
+        binding.rvFavorite.adapter = adapter
+        binding.rvFavorite.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        model.dataUser.observe(viewLifecycleOwner) {
+            userId = it.userId
+            username = it.nama
+            Log.d(ContentValues.TAG, "UserID : $userId, $username")
 
-
+            if (it.equals("")) {
+                Log.d(ContentValues.TAG, "UserID Null : $userId")
+            } else {
+                viewModel.callAllFavorite(userId)
+                viewModel.allLiveData().observe(viewLifecycleOwner) {
+                    if (it != null) {
+                        adapter.setData(it as ArrayList<ResponseDataTaskItem> /* = java.util.ArrayList<com.fal.challengechapter6.model.ResponseDataTaskItem> */)
+                        binding.rvFavorite.adapter = FavoriteAdapter(it)
+                        adapter = FavoriteAdapter(it)
+                        binding.rvFavorite.layoutManager =
+                            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                    }
+                }
+            }
+        }
+    }
 }

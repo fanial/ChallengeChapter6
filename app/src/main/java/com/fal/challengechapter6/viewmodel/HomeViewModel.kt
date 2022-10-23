@@ -3,7 +3,6 @@ package com.fal.challengechapter6.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.fal.challengechapter6.model.ResponseDataTaskItem
-import com.fal.challengechapter6.network.ApiClient
 import com.fal.challengechapter6.network.ApiService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Call
@@ -33,6 +32,26 @@ class HomeViewModel @Inject constructor(private val apiService: ApiService): Vie
     //Retrofit
     fun callAllData(userId: String){
         apiService.getTask(userId)
+            .enqueue(object : Callback<List<ResponseDataTaskItem>>{
+                override fun onResponse(
+                    call: Call<List<ResponseDataTaskItem>>,
+                    response: Response<List<ResponseDataTaskItem>>,
+                ) {
+                    if (response.isSuccessful){
+                        allData.postValue(response.body())
+                    }else{
+                        allData.postValue(null)
+                    }
+                }
+
+                override fun onFailure(call: Call<List<ResponseDataTaskItem>>, t: Throwable) {
+                    allData.postValue(null)
+                }
+            })
+    }
+
+    fun callAllFavorite(userId: String){
+        apiService.getFav(userId)
             .enqueue(object : Callback<List<ResponseDataTaskItem>>{
                 override fun onResponse(
                     call: Call<List<ResponseDataTaskItem>>,
