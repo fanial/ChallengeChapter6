@@ -9,8 +9,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_centerInParent="true">
+        android:layout_margin="10dp">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -31,14 +30,23 @@
                 android:layout_height="250dp"
                 android:layout_below="@id/tv"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/fragment_horizontal_margin"
-                android:src="@drawable/ic_baseline_add_24"
-                android:contentDescription="@string/profile" />
+                android:layout_marginBottom="5dp"
+                android:contentDescription="@string/profile"
+                android:src="@drawable/ic_baseline_add_24" />
+
+            <Button
+                android:id="@+id/btn_blur"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btn_image"
+                android:layout_marginBottom="@dimen/fab_margin"
+                android:layout_centerHorizontal="true"
+                android:text="@string/blur_image" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/inputLayoutEmail"
                 app:errorEnabled="true"
-                android:layout_below="@+id/btn_image"
+                android:layout_below="@+id/btn_blur"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
