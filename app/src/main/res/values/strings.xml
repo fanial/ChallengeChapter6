@@ -46,10 +46,9 @@
     <string name="favorite">Favorite</string>
     <string name="logout_for_update">You have change Password. Login for new Password</string>
     <string name="pass_not_match">Password not Match</string>
-    <string name="favorited">Task Mark as Favorite</string>
-    <string name="unmark_favorited">Task Unmark as Favorite</string>
+    <string name="favorited">Note Mark as Favorite</string>
+    <string name="unmark_favorited">Note Unmark as Favorite</string>
     <string name="blur_image">Blur Image</string>
-    <string name="set_permissions_in_settings"><![CDATA[Go to Settings -> Apps and Notifications ->         WorkManager Demo -> App Permissions and grant access to Storage.]]></string>
+    <string name="set_permissions_in_settings" translatable="false"><![CDATA[Go to Settings -> Apps and Notifications ->        Notes App -> App Permissions and grant access to Storage.]]></string>
     <string name="image_from_gallery">Image from Gallery</string>
-    <string name="see_image">See Image Result</string>
 </resources>

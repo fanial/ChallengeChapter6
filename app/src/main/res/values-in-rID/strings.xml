@@ -41,4 +41,11 @@
     <string name="update">Ubah</string>
     <string name="category">Kategori</string>
     <string name="title">Judul</string>
+    <string name="logout_for_update">Kamu telah mengubah kata sandi. Login untuk sandi yang baru</string>
+    <string name="pass_not_match">kata sandi tidak cocok</string>
+    <string name="favorited">Catatan ditandai sebagai Favorit</string>
+    <string name="unmark_favorited">Catatan dihapus sebagai Favorit</string>
+    <string name="blur_image">Buramkan Gambar</string>
+    <string name="image_from_gallery">Gambar dari Gallery</string>
+    <string name="favorite">Favorit</string>
 </resources>

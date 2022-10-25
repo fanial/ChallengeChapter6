@@ -1,10 +1,9 @@
 package com.fal.challengechapter6.fragment
 
 import android.Manifest
+import android.content.ContentValues.TAG
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,12 +15,17 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.work.WorkInfo
 import com.fal.challengechapter6.R
 import com.fal.challengechapter6.databinding.FragmentProfileBinding
+import com.fal.challengechapter6.viewmodel.BlurViewModel
+import com.fal.challengechapter6.viewmodel.BlurViewModelFactory
 import com.fal.challengechapter6.viewmodel.UserViewModel
 import com.fal.challengechapter6.workers.KEY_IMAGE_URI
+import com.fal.challengechapter6.workers.KEY_PROGRESS
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,8 +33,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
     companion object {
-        // Intent request constant for Picking an Image
-        const val REQUEST_CODE_IMAGE = 100
         // Permission request constant for External storage access
         const val REQUEST_CODE_PERMISSIONS = 101
 
@@ -48,11 +50,16 @@ class ProfileFragment : Fragment() {
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
 
+    private val viewModel: BlurViewModel by viewModels { BlurViewModelFactory(requireActivity().application) }
+
     private val galleryResult =
         registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
-            startActivity(Intent(requireContext(), BlurActivity::class.java).apply {
-                putExtra(KEY_IMAGE_URI, result.toString())
-            })
+            viewModel.setImageUri(result.toString())
+            if (result != null){
+                viewModel.applyBlur(1)
+            }else{
+                Log.d(TAG, "Image URI Status: Unexpected URI")
+            }
         }
 
     private val profilePic =
@@ -116,6 +123,71 @@ class ProfileFragment : Fragment() {
             requireActivity().intent.type = "image/*"
             galleryResult.launch("image/*")
         }
+
+        viewModel.outputWorkInfos.observe(viewLifecycleOwner) { workInfos ->
+            if (!workInfos.isNullOrEmpty()) {
+                // When WorkInfo Objects are generated
+
+                // Pick the first WorkInfo object. There will be only one WorkInfo object
+                // since the corresponding WorkRequest that was tagged is part of a unique work chain
+                val workInfo = workInfos[0]
+
+                // Check the work status
+                if (workInfo.state.isFinished) {
+                    // When the work is finished (i.e., SUCCEEDED / FAILED / CANCELLED),
+                    // show and hide the appropriate views for the same
+                    showWorkFinished()
+
+                    // Read the final output Image URI string from the WorkInfo's Output Data
+                    workInfo.outputData.getString(KEY_IMAGE_URI)
+                        .takeIf { !it.isNullOrEmpty() }?.let { outputUriStr ->
+                            // When we have the final Image URI
+
+                            // Save the final Image URI string in the ViewModel
+                            viewModel.setOutputUri(outputUriStr)
+                        }
+
+                } else {
+                    // In other cases, show and hide the appropriate views for the same
+                    showWorkInProgress()
+                }
+            }
+        }
+
+        viewModel.progressWorkInfos.observe(viewLifecycleOwner) { workInfos ->
+            if (!workInfos.isNullOrEmpty()) {
+                // When WorkInfo Objects are generated
+
+                // Apply for all WorkInfo Objects
+                workInfos.forEach { workInfo ->
+                    if (workInfo.state == WorkInfo.State.RUNNING) {
+                        // When the Work is in progress,
+                        // obtain the Progress Data and update the Progress to ProgressBar
+                        binding.progressCircular.progress =
+                            workInfo.progress.getInt(KEY_PROGRESS, 0)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showWorkInProgress() {
+        with(binding) {
+            progressCircular.visibility = View.VISIBLE
+            btnBlur.visibility = View.GONE
+        }
+    }
+
+    /**
+     * Shows and hides views for when the Activity is done processing an image
+     */
+    private fun showWorkFinished() {
+        with(binding) {
+            progressCircular.visibility = View.GONE
+            btnBlur.visibility = View.VISIBLE
+            // Ensuring that the progress restarts at initial 0 after completion of Work
+            progressCircular.progress = 0
+        }
     }
 
     private fun requestPermissionsIfNecessary() {
@@ -133,6 +205,9 @@ class ProfileFragment : Fragment() {
                     REQUEST_CODE_PERMISSIONS
                 )
             } else {
+                // Disable the "Select Image" button when access is denied by the user
+                binding.btnImage.isEnabled = false
+                binding.btnBlur.isEnabled = false
                 // When the number of permission request retried exceeds the max limit set
                 // Show a toast about how to update the permission for storage access
                 Toast.makeText(
@@ -140,9 +215,12 @@ class ProfileFragment : Fragment() {
                     R.string.set_permissions_in_settings,
                     Toast.LENGTH_LONG
                 ).show()
-                // Disable the "Select Image" button when access is denied by the user
-                binding.btnImage.isEnabled = false
             }
+        }else{
+            Toast.makeText(context, "Access Denied", Toast.LENGTH_LONG).show()
+            // Disable the "Select Image" button when access is denied by the user
+            binding.btnImage.isEnabled = false
+            binding.btnBlur.isEnabled = false
         }
     }
 
