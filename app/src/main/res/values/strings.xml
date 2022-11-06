@@ -12,7 +12,7 @@
     <string name="action_sign_in">Sign in or Register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome!"</string>
-    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_username">Not a valid E-mail</string>
     <string name="invalid_password">Password Invalid</string>
     <string name="login_failed">"Login failed"</string>
     <string name="label_regist">Don\'t have account? Register here</string>
@@ -51,4 +51,7 @@
     <string name="blur_image">Blur Image</string>
     <string name="set_permissions_in_settings" translatable="false"><![CDATA[Go to Settings -> Apps and Notifications ->        Notes App -> App Permissions and grant access to Storage.]]></string>
     <string name="image_from_gallery">Image from Gallery</string>
+    <string name="length_pass">Password must not be less than 8</string>
+    <string name="free_version">you\'re currently using the free version</string>
+    <string name="wel">Welcome, </string>
 </resources>

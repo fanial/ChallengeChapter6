@@ -1,6 +1,7 @@
 package com.fal.challengechapter6.viewmodel
 
 import android.app.Application
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -8,7 +9,10 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.fal.challengechapter6.model.ResponseDataUserItem
 import com.fal.challengechapter6.network.ApiService
+import com.fal.challengechapter6.repository.FirebaseRepository
 import com.fal.challengechapter6.repository.UserPrefRepository
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -17,7 +21,13 @@ import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class UserViewModel @Inject constructor(private val api : ApiService, application: Application) : AndroidViewModel(application) {
+class UserViewModel @Inject constructor(
+    private val api: ApiService,
+    private val firebaseRepository: FirebaseRepository,
+    private val firebaseAuth: FirebaseAuth,
+    application: Application
+) : AndroidViewModel(application) {
+
     //Data Store
     private val repository = UserPrefRepository(application)
     val dataUser = repository.readProto.asLiveData()
@@ -52,7 +62,7 @@ class UserViewModel @Inject constructor(private val api : ApiService, applicatio
 
 
     //Retrofit
-    fun getUser(username: String, password: String){
+    fun getUser(email: String, password: String){
         api.getUser()
             .enqueue(object : Callback<List<ResponseDataUserItem>>{
                 override fun onResponse(
@@ -60,7 +70,36 @@ class UserViewModel @Inject constructor(private val api : ApiService, applicatio
                     response: Response<List<ResponseDataUserItem>>,
                 ) {
                     if (response.isSuccessful){
-                        userList.postValue(response.body()!!)
+                        userList.postValue(response.body())
+                        firebaseAuth.fetchSignInMethodsForEmail(email).addOnCompleteListener {
+                            if (it.result?.signInMethods?.size == 0){
+                                userList.postValue(null)
+                            }else{
+                                firebaseRepository.login(email, password).addOnCompleteListener { task ->
+                                    if (task.isSuccessful){
+                                        firebaseAuth.currentUser?.isEmailVerified?.let { verified ->
+                                            if (verified){
+                                                firebaseRepository.fetchUser().addOnCompleteListener { userTask ->
+                                                    if (userTask.isSuccessful){
+                                                        userTask.result?.documents?.forEach { it ->
+                                                            if (it.data!![email] == email){
+                                                                firebaseAuth.currentUser?.email!!
+                                                            }
+                                                        }
+                                                    }else{
+                                                        userList.postValue(null)
+                                                    }
+                                                }
+                                            }else{
+                                                error("Email is not verified, check your email")
+                                            }
+                                        }
+                                    }else{
+                                        userList.postValue(null)
+                                    }
+                                }
+                            }
+                        }
                     }else{
                         userList.postValue(null)
                     }
@@ -72,6 +111,7 @@ class UserViewModel @Inject constructor(private val api : ApiService, applicatio
 
             })
     }
+
     fun postDataUser(email : String, id : String, password : String, username : String){
         api.postUser(ResponseDataUserItem(email, id, password, username))
             .enqueue(object : Callback<ResponseDataUserItem>{
@@ -80,7 +120,27 @@ class UserViewModel @Inject constructor(private val api : ApiService, applicatio
                     response: Response<ResponseDataUserItem>,
                 ) {
                     if (response.isSuccessful){
-                        userData.postValue(response.body())
+                        firebaseAuth.fetchSignInMethodsForEmail(email).addOnCompleteListener {
+                            if (it.result?.signInMethods?.size == 0){
+                                firebaseRepository.register(email, password, username).addOnCompleteListener { task ->
+                                    if (task.isSuccessful){
+                                        firebaseAuth.currentUser?.sendEmailVerification()
+                                        userData.postValue(response.body())
+                                        firebaseRepository.saveUser(email, username, password).addOnCompleteListener { it ->
+                                            if (it.isSuccessful){
+                                                userData.postValue(response.body())
+                                            }else{
+                                                userData.postValue(null)
+                                            }
+                                        }
+                                    }else{
+                                        userData.postValue(null)
+                                    }
+                                }
+                            }else{
+                                userData.postValue(null)
+                            }
+                        }
                     }else{
                         error(response.message())
                     }

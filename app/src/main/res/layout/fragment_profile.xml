@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragment.ProfileFragment">
+    tools:context=".view.fragment.ProfileFragment">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -60,13 +60,15 @@
                 app:errorEnabled="true"
                 android:layout_below="@+id/btn_blur"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/vEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
+                    android:enabled="false"
                     android:inputType="textEmailAddress"
                     android:minHeight="48dp" />
             </com.google.android.material.textfield.TextInputLayout>

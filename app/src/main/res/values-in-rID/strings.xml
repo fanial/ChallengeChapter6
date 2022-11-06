@@ -48,4 +48,7 @@
     <string name="blur_image">Buramkan Gambar</string>
     <string name="image_from_gallery">Gambar dari Gallery</string>
     <string name="favorite">Favorit</string>
+    <string name="length_pass">Kata sandi tidak boleh kurang dari 8</string>
+    <string name="free_version">kamu saat ini menggunakan versi gratis</string>
+    <string name="wel">Selamat Datang, </string>
 </resources>
