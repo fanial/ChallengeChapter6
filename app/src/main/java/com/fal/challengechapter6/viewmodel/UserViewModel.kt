@@ -1,8 +1,6 @@
 package com.fal.challengechapter6.viewmodel
 
 import android.app.Application
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
@@ -11,7 +9,6 @@ import com.fal.challengechapter6.model.ResponseDataUserItem
 import com.fal.challengechapter6.network.ApiService
 import com.fal.challengechapter6.repository.FirebaseRepository
 import com.fal.challengechapter6.repository.UserPrefRepository
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -120,13 +117,13 @@ class UserViewModel @Inject constructor(
                     response: Response<ResponseDataUserItem>,
                 ) {
                     if (response.isSuccessful){
-                        firebaseAuth.fetchSignInMethodsForEmail(email).addOnCompleteListener {
+                        firebaseAuth.fetchSignInMethodsForEmail(email).addOnCompleteListener { it ->
                             if (it.result?.signInMethods?.size == 0){
                                 firebaseRepository.register(email, password, username).addOnCompleteListener { task ->
                                     if (task.isSuccessful){
                                         firebaseAuth.currentUser?.sendEmailVerification()
                                         userData.postValue(response.body())
-                                        firebaseRepository.saveUser(email, username, password).addOnCompleteListener { it ->
+                                        firebaseRepository.saveUser(email, username, password).addOnCompleteListener {
                                             if (it.isSuccessful){
                                                 userData.postValue(response.body())
                                             }else{

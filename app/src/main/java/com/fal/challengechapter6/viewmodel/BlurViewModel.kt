@@ -1,16 +1,12 @@
 package com.fal.challengechapter6.viewmodel
 
 import android.app.Application
-import android.content.ContentResolver
-import android.content.Context
 import android.net.Uri
-import android.text.TextUtils
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.work.*
-import com.fal.challengechapter6.R
 import com.fal.challengechapter6.workers.*
 
 class BlurViewModel(application: Application) : AndroidViewModel(application) {
@@ -18,8 +14,8 @@ class BlurViewModel(application: Application) : AndroidViewModel(application) {
     private val workManager = WorkManager.getInstance(application).also {
         it.pruneWork()
     }
-    internal var imageUri: Uri? = null
-    internal var outputUri: Uri? = null
+    private var imageUri: Uri? = null
+    private var outputUri: Uri? = null
 
     // LiveData for SaveToImageFileWorker's WorkInfo objects to retrieve its status and output Data
     val outputWorkInfos: LiveData<List<WorkInfo>> = workManager.getWorkInfosByTagLiveData(TAG_OUTPUT)
@@ -84,6 +80,7 @@ class BlurViewModel(application: Application) : AndroidViewModel(application) {
 }
 
 
+@Suppress("UNCHECKED_CAST")
 class BlurViewModelFactory(private val application: Application) :
     ViewModelProvider.AndroidViewModelFactory(application) {
 

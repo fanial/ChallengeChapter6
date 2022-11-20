@@ -1,23 +1,19 @@
 package com.fal.challengechapter6.viewmodel
 
 import com.fal.challengechapter6.model.ResponseDataUserItem
-import com.fal.challengechapter6.model.firebase.FirebaseSource
 import com.fal.challengechapter6.network.ApiService
-import com.fal.challengechapter6.repository.FirebaseRepository
-import com.google.firebase.auth.FirebaseAuth
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
-
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import retrofit2.Call
 
 class UserViewModelTest {
 
-    lateinit var service: ApiService
+    private lateinit var service: ApiService
 
     @Before
     fun setUp() {

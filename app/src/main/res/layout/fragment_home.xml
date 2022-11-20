@@ -17,10 +17,11 @@
         android:id="@+id/btn_favorit"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_marginStart="300dp"
         android:layout_marginTop="5dp"
         android:padding="8dp"
         android:src="@drawable/ic_baseline_favorite_24"
-        android:layout_marginStart="300dp"/>
+        tools:ignore="ImageContrastCheck" />
 
     <ImageView
         android:id="@+id/btn_profil"
@@ -52,6 +53,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/margin_button"
-        android:src="@drawable/ic_baseline_add_24"/>
+        android:src="@drawable/ic_baseline_add_24"
+        tools:ignore="ImageContrastCheck,SpeakableTextPresentCheck" />
 
 </RelativeLayout>

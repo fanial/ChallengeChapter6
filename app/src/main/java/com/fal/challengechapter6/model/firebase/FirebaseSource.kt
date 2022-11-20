@@ -1,16 +1,14 @@
 package com.fal.challengechapter6.model.firebase
 
-import com.fal.challengechapter6.User
 import com.fal.challengechapter6.model.ResponseDataUserItem
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import javax.inject.Inject
 
+@Suppress("UNUSED_PARAMETER")
 class FirebaseSource @Inject constructor(private val firebaseAuth : FirebaseAuth, private val firestore: FirebaseFirestore) {
     //Register User using Email and Password
-    fun register(email : String, password : String, username : String) = firebaseAuth.createUserWithEmailAndPassword(email, password)
+    fun register(email : String, password : String, username: String) = firebaseAuth.createUserWithEmailAndPassword(email, password)
 
     //Login User using Email and Password
     fun login(email: String, password: String) = firebaseAuth.signInWithEmailAndPassword(email, password)

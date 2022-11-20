@@ -5,17 +5,11 @@ import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import com.fal.challengechapter6.UserProto
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import java.io.IOException
-import javax.inject.Inject
-import javax.inject.Singleton
 
-    //Create DataStore Proto
+//Create DataStore Proto
     private val Context.userPreferencesStore: DataStore<UserProto> by dataStore(
         fileName = "userData",
         serializer = UserPrefSerialize

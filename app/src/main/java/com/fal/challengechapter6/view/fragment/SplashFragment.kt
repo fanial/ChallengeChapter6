@@ -53,7 +53,7 @@ class SplashFragment : Fragment() {
     }
 
     private fun detectAcc() {
-        model = ViewModelProvider(this).get(UserViewModel::class.java)
+        model = ViewModelProvider(this)[UserViewModel::class.java]
         model.dataUser.observe(viewLifecycleOwner){
                 if(it.userId.equals("")){
                     Log.d("SESSIONS", "UserID Null : $userId, $username")

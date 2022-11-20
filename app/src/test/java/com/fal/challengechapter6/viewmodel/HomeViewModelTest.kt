@@ -13,7 +13,7 @@ import org.junit.Test
 import retrofit2.Call
 
 class HomeViewModelTest {
-    lateinit var service: ApiService
+    private lateinit var service: ApiService
 
     @Before
     fun setUp() {

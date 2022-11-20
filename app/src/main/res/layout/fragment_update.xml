@@ -90,10 +90,11 @@
                 android:id="@+id/btn_close"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/salmon"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="5dp"
-                android:text="@string/cancel"/>
+                android:backgroundTint="@color/salmon"
+                android:text="@string/cancel"
+                tools:ignore="TextContrastCheck" />
 
 
         </com.google.android.material.bottomappbar.BottomAppBar>

@@ -33,7 +33,7 @@ class FavoriteFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentFavoriteBinding.inflate(inflater, container, false)
         return binding.root
@@ -47,7 +47,7 @@ class FavoriteFragment : Fragment() {
         adapter = FavoriteAdapter(ArrayList())
         binding.rvFavorite.adapter = adapter
         binding.rvFavorite.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        model.dataUser.observe(viewLifecycleOwner) {
+        model.dataUser.observe(viewLifecycleOwner) { it ->
             userId = it.userId
             username = it.nama
             Log.d(ContentValues.TAG, "UserID : $userId, $username")
@@ -58,7 +58,7 @@ class FavoriteFragment : Fragment() {
                 viewModel.callAllFavorite(userId)
                 viewModel.allLiveData().observe(viewLifecycleOwner) {
                     if (it != null) {
-                        adapter.setData(it as ArrayList<ResponseDataTaskItem> /* = java.util.ArrayList<com.fal.challengechapter6.model.ResponseDataTaskItem> */)
+                        adapter.setData(data = it as ArrayList<ResponseDataTaskItem> /* = java.util.ArrayList<com.fal.challengechapter6.model.ResponseDataTaskItem> */)
                         binding.rvFavorite.adapter = FavoriteAdapter(it)
                         adapter = FavoriteAdapter(it)
                         binding.rvFavorite.layoutManager =

@@ -7,14 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fal.challengechapter6.R
-import com.fal.challengechapter6.view.adapter.ListAdapter
 import com.fal.challengechapter6.databinding.FragmentHomeBinding
 import com.fal.challengechapter6.model.ResponseDataTaskItem
+import com.fal.challengechapter6.view.adapter.ListAdapter
 import com.fal.challengechapter6.viewmodel.HomeViewModel
 import com.fal.challengechapter6.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -84,7 +83,7 @@ class HomeFragment : Fragment() {
                     append(username)
                 }
                 viewModel.callAllData(userId)
-                viewModel.allLiveData().observe(viewLifecycleOwner, Observer {
+                viewModel.allLiveData().observe(viewLifecycleOwner) {
                     if (it != null) {
                         adapter.setData(it as ArrayList<ResponseDataTaskItem> /* = java.util.ArrayList<com.fal.challengechapter6.model.ResponseDataTaskItem> */)
                         binding.rvTask.adapter = ListAdapter(it)
@@ -92,7 +91,7 @@ class HomeFragment : Fragment() {
                         binding.rvTask.layoutManager =
                             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                     }
-                })
+                }
             }
         }
     }

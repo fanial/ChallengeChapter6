@@ -19,12 +19,6 @@ interface ApiService {
         @Query("category") favorite : String = "favorite"
     ) : Call<List<ResponseDataTaskItem>>
 
-    @GET("user/{id}/task/{idTask}")
-    fun getTaskId(
-        @Path("id") userId: String,
-        @Path("idTask") idTask: String
-    ) : Call<ResponseDataTaskItem>
-
     @PUT("user/{id}/task/{idTask}")
     fun putData(
         @Path("id") userId: String,

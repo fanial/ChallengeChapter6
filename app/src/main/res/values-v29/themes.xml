@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <style name="Theme.ChallengeChapter6" parent="Base.Theme.ChallengeChapter6">
         <!-- Transparent system bars for edge-to-edge. -->

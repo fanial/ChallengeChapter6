@@ -1,5 +1,6 @@
 package com.fal.challengechapter6.workers
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.ContentValues.TAG
@@ -24,6 +25,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
+@SuppressLint("ObsoleteSdkInt")
 fun makeStatusNotification(message: String, context: Context) {
 
     // Make a channel if necessary
